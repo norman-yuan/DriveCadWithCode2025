@@ -6,6 +6,8 @@ namespace MapCoordTracking
 {
     public class MyCommands : IExtensionApplication
     {
+        #region IExtensionApplication implemetation
+
         public void Initialize()
         {
             var dwg = CadApp.DocumentManager.MdiActiveDocument;
@@ -32,13 +34,13 @@ namespace MapCoordTracking
 
         }
 
-        [CommandMethod("MyCmd")]
+        #endregion
+
+        [CommandMethod("TrackCoord", CommandFlags.Session)]
         public static void RunMyCommand()
         {
             var dwg = CadApp.DocumentManager.MdiActiveDocument;
-            var ed = dwg.Editor;
-
-            ed.WriteMessage("\nHello from AutoCAD 2025");
+            CoordTrackerCollection.Instance.ShowTracker(dwg);
         }
     }
 }
