@@ -9,9 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUiSupport", "WpfUiSuppor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCADUtilities", "AutoCADUtilities\AutoCADUtilities.csproj", "{34CAFEE5-C15D-4975-A07B-B6B933E60844}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapUtilities", "MapUtilities\MapUtilities.csproj", "{B46C00EB-0972-4129-BB63-4474CDD6D430}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapUtilities", "MapUtilities\MapUtilities.csproj", "{B46C00EB-0972-4129-BB63-4474CDD6D430}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentOpenXmlTest", "DocumentOpenXmlTest\DocumentOpenXmlTest.csproj", "{6805B02D-109E-47D0-9A11-F04925F51E12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentOpenXmlTest", "DocumentOpenXmlTest\DocumentOpenXmlTest.csproj", "{6805B02D-109E-47D0-9A11-F04925F51E12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DTest", "C3DTest\C3DTest.csproj", "{5967E3BB-47A5-4C07-9E92-6C2CF0D6E36A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoLayerChange", "NoLayerChange\NoLayerChange.csproj", "{DCED3778-07FC-4354-BE59-6CE46ED43C68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEditing", "TextEditing\TextEditing.csproj", "{B824B7A3-448F-4A50-BC3B-C72696AB7681}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,18 @@ Global
 		{6805B02D-109E-47D0-9A11-F04925F51E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6805B02D-109E-47D0-9A11-F04925F51E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6805B02D-109E-47D0-9A11-F04925F51E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5967E3BB-47A5-4C07-9E92-6C2CF0D6E36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5967E3BB-47A5-4C07-9E92-6C2CF0D6E36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5967E3BB-47A5-4C07-9E92-6C2CF0D6E36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5967E3BB-47A5-4C07-9E92-6C2CF0D6E36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
