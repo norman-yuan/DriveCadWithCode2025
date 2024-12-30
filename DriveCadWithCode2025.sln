@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C3DTest", "C3DTest\C3DTest.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoLayerChange", "NoLayerChange\NoLayerChange.csproj", "{DCED3778-07FC-4354-BE59-6CE46ED43C68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEditing", "TextEditing\TextEditing.csproj", "{B824B7A3-448F-4A50-BC3B-C72696AB7681}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcadMicsTests", "AcadMicsTests\AcadMicsTests.csproj", "{84F801B4-8A8F-4170-9C47-8151A383216B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCED3778-07FC-4354-BE59-6CE46ED43C68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B824B7A3-448F-4A50-BC3B-C72696AB7681}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84F801B4-8A8F-4170-9C47-8151A383216B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84F801B4-8A8F-4170-9C47-8151A383216B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84F801B4-8A8F-4170-9C47-8151A383216B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84F801B4-8A8F-4170-9C47-8151A383216B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
