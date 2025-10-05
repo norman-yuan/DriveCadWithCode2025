@@ -1,6 +1,7 @@
 ﻿
 using Autodesk.AutoCAD.DatabaseServices.Filters;
 using DriveCadWithCode2025.AutoCADUtilities;
+using RestSharp;
 
 [assembly: CommandClass(typeof(AcadMicsTests.MyCommands))]
 
@@ -10,6 +11,8 @@ namespace AcadMicsTests
     {
         private const string FILTER_DICT_NAME = "ACAD_FILTER";
         private const string SPATIAL_DICT_NAME = "SPATIAL";
+
+        #region Clipping block reference
 
         [CommandMethod("ClipBlk")]
         public static void ClipBlockReference()
@@ -54,6 +57,7 @@ namespace AcadMicsTests
 
             if (points == null) return;
 
+            
             using (var tran = dwg.TransactionManager.StartTransaction())
             {
                 var blk = (BlockReference)tran.GetObject(res.ObjectId, OpenMode.ForRead);
@@ -93,6 +97,8 @@ namespace AcadMicsTests
                     double.PositiveInfinity, double.NegativeInfinity, true);
                 var filter = new SpatialFilter();
                 filter.Definition = definition;
+                filter.Inverted = true;
+
                 filterDict.SetAt(SPATIAL_DICT_NAME, filter);
                 tran.AddNewlyCreatedDBObject(filter, true);
 
@@ -101,6 +107,8 @@ namespace AcadMicsTests
 
             ed.Regen();
             ed.UpdateScreen();
+
+            GetExistingSpatialFilter(res.ObjectId);
         }
 
         [CommandMethod("RemoveClip")]
@@ -198,6 +206,28 @@ namespace AcadMicsTests
             return pt2ds;
         }
 
+        private static void GetExistingSpatialFilter(ObjectId entId)
+        {
+            using (var tran = entId.Database.TransactionManager.StartTransaction())
+            {
+                var ent = (Entity)tran.GetObject(entId, OpenMode.ForRead);
+                if (!ent.ExtensionDictionary.IsNull)
+                {
+                    var extDict = (DBDictionary)tran.GetObject(ent.ExtensionDictionary, OpenMode.ForRead);
+                    if (extDict.Contains(FILTER_DICT_NAME))
+                    {
+                        var filterDict = (DBDictionary)tran.GetObject(extDict.GetAt(FILTER_DICT_NAME), OpenMode.ForRead);
+                        if (filterDict.Contains(SPATIAL_DICT_NAME))
+                        {
+                            var spFilter = (SpatialFilter)tran.GetObject(filterDict.GetAt(SPATIAL_DICT_NAME), OpenMode.ForRead);
+                            var inverted = spFilter.Inverted;
+                        }
+                    }
+                }
+                tran.Commit();
+            }
+        }
+
         #region following command crash AutoCAD: because SpatialFilter is "read-only"
 
         [CommandMethod("SetClip")]
@@ -254,7 +284,7 @@ namespace AcadMicsTests
 
         #endregion
 
-
+        #endregion
 
         #region command to add custom ribbon tab
 
@@ -311,6 +341,159 @@ namespace AcadMicsTests
             catch (System.Exception ex)
             {
                 CadApp.ShowAlertDialog($"Error:\n{ex.Message}");
+            }
+        }
+
+        #endregion
+
+        #region Determine COPY/PASTE source file
+
+        private static IntPtr _copySourceDoc = IntPtr.Zero;
+        private static bool _isCopyClip = false;
+
+        [CommandMethod("HandlePaste")]
+        public static void GetDataInClipboard()
+        {
+            foreach (Document dwg in CadApp.DocumentManager)
+            {
+                var db = dwg.Database;
+
+                db.WblockNotice += Db_WblockNotice;
+                dwg.CommandWillStart += Dwg_CommandWillStart;
+                dwg.CommandEnded += Dwg_CommandEnded;
+            }
+
+            CadApp.DocumentManager.DocumentCreated += (o, e) =>
+            {
+                var dwg = e.Document;
+                var db = dwg.Database;
+
+                db.WblockNotice += Db_WblockNotice;
+                dwg.CommandWillStart += Dwg_CommandWillStart;
+                dwg.CommandEnded += Dwg_CommandEnded;
+            };
+        }
+
+        private static void Db_WblockNotice(object sender, WblockNoticeEventArgs e)
+        {
+            if (_isCopyClip)
+            {
+                _copySourceDoc = CadApp.DocumentManager.MdiActiveDocument.UnmanagedObject;
+            }
+        }
+
+        private static void Dwg_CommandEnded(object sender, CommandEventArgs e)
+        {
+            if (e.GlobalCommandName.ToUpper().Contains("COPYCLIP") ||
+                e.GlobalCommandName.ToUpper().Contains("COPYBASE"))
+            {
+                _isCopyClip = false;
+            }
+        }
+
+        private static void Dwg_CommandWillStart(object sender, CommandEventArgs e)
+        {
+            if (e.GlobalCommandName.ToUpper().Contains("COPYCLIP") ||
+                e.GlobalCommandName.ToUpper().Contains("COPYBASE"))
+            {
+                _isCopyClip = true;
+            }
+            else if (e.GlobalCommandName.ToUpper().Contains("PASTECLIP") ||
+                e.GlobalCommandName.ToUpper().Contains("PASTEORIG"))
+            {
+                var sourceFile = "";
+                foreach (Document dwg in CadApp.DocumentManager)
+                {
+                    if (dwg.UnmanagedObject == _copySourceDoc)
+                    {
+                        sourceFile = dwg.Name;
+                        break;
+                    }
+                }
+
+                CadApp.DocumentManager.MdiActiveDocument.Editor.WriteMessage(
+                    $"\nYou are to paste objects copied from:\n{sourceFile}...\n");
+            }
+        }
+
+        #endregion
+
+        #region RestSharp client test
+
+        [CommandMethod("RestSharpTest")]
+        public static async void TestRestSharp()
+        {
+            var dwg = CadApp.DocumentManager.MdiActiveDocument;
+            var ed = dwg.Editor;
+
+            var baseUrl = "https://www.bing.com";
+            var options = new RestClientOptions(baseUrl)
+            {
+                ThrowOnAnyError = false
+            };
+
+            using (var restSharp = new RestSharp.RestClient(options))
+            {
+                var data = await restSharp.GetAsync(new RestRequest(""));
+            }
+        }
+
+        [CommandMethod("TestEntitlement")]
+        public static async void TestAppEntitlement()
+        {
+            var dwg = CadApp.DocumentManager.MdiActiveDocument;
+            var ed = dwg.Editor;
+
+            var userId = CadApp.GetSystemVariable("ONLINEUSERID").ToString();
+            var appId = "250987619170000000";
+            var isOk = await IsAppEntitled(userId, appId);
+        }
+
+        private static async Task<bool> IsAppEntitled(string userId, string appId)
+        {
+            var ok = false;
+            //var baseUrl = "https://apps.autodesk.com/webservices/checkentitlement";
+            var baseUrl = "https://apps.autodesk.com";
+            var options = new RestClientOptions(baseUrl)
+            {
+                ThrowOnAnyError = false
+            };
+            var request = new RestRequest("webservices/checkentitlement");
+            request.AddQueryParameter("userId", userId);
+            request.AddQueryParameter("appId", appId);
+
+            using (var restSharp = new RestSharp.RestClient(options))
+            {
+                try
+                {
+                    var response = await restSharp.GetAsync(request);
+                    // ... decide if the response means entitled or not
+                    ok = true;
+                }
+                catch (System.Exception ex)
+                {
+                    CadApp.ShowAlertDialog(ex.Message);
+                    ok = false;
+                }
+            }
+            return ok;
+        }
+
+        #endregion
+
+        #region pick portion of a curve
+
+        [CommandMethod("PickCurvePortion")]
+        public static void SelectPortionOfCurve()
+        {
+            var dwg=CadApp.DocumentManager.MdiActiveDocument;
+
+            using (var picker = new CurvePortionPicker(dwg))
+            {
+                if (picker.PickCurvePortion())
+                {
+
+                }
             }
         }
 
